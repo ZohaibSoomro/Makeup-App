@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-const kTitleStyle = TextStyle(fontSize: 70);
+const kTitleStyle = TextStyle(fontSize: 50);
 const kTextStyle = TextStyle(color: Colors.black54);
+
 const kTextFieldDecoration = InputDecoration(
   hintText: 'enter a value',
   contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),

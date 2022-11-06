@@ -1,38 +1,43 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mad_project/Screens/cart_screen.dart';
 import 'package:mad_project/Screens/forget_password.dart';
 import 'package:mad_project/Screens/login_screen.dart';
-import 'package:mad_project/components/shopping_cart_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:mad_project/db/db_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Screens/Signup_screen.dart';
 import 'Screens/home_screen.dart';
 
-void main() {
+bool? isLoggedIn;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await DbHelper.instance.database;
+  isLoggedIn = prefs.getBool('isLoggedIn');
   runApp(
-    ChangeNotifierProvider(
-      create: (BuildContext context) {
-        return ShoppingCartProvider();
-      },
-      child: Epos(),
-    ),
+    const MakeupApp(),
   );
 }
 
-class Epos extends StatelessWidget {
-  const Epos({Key? key}) : super(key: key);
+class MakeupApp extends StatelessWidget {
+  const MakeupApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: Login.id,
+      initialRoute:
+          isLoggedIn == null || !isLoggedIn! ? Login.id : HomeScreen.id,
       routes: {
-        Login.id: (context) => Login(),
-        SignUp.id: (context) => SignUp(),
+        Login.id: (context) => const Login(),
+        SignUp.id: (context) => const SignUp(),
         ForgetPassword.id: (context) => ForgetPassword(),
-        HomeScreen.id: (context) => HomeScreen(),
-        CartScreen.id: (context) => CartScreen(),
+        HomeScreen.id: (context) => const HomeScreen(),
+        CartScreen.id: (context) => const CartScreen(),
       },
     );
   }
